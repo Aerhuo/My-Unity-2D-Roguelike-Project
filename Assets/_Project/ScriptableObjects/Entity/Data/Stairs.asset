@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e52e000e8dd55742a29c0d69e446d5b, type: 3}
+  m_Name: Stairs
+  m_EditorClassIdentifier: Assembly-CSharp::EntityDataSO
+  entityName: Stairs
+  entityID: 1
+  maxHp: 100
+  maxMp: 10
+  pAtk: 20
+  mAtk: 20
+  pDef: 10
+  mDef: 10
+  speed: 20
+  viewRadius: 5
+  faction: 0
+  prefab: {fileID: 6261377905575560557, guid: b235cba95cf93434490690fdc2eba6d2, type: 3}
+  spawnCost: 400
