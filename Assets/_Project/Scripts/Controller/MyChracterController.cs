@@ -1,11 +1,10 @@
 using UnityEngine;
-[RequireComponent(typeof(EntityStats))]
 [RequireComponent(typeof(FOVComponent))]
 
 public class MyChracterController : EntityController, ICharacterController, IEntitySpawnAndDie
 {
     private FadeComponent fadeComponent;
-    private EntityStats entityStats;
+    private IAttacker attacker;
     private AnimationComponent animationComponent;
     private FOVComponent fOVComponent;
     private TagComponent tagComponent;
@@ -13,7 +12,7 @@ public class MyChracterController : EntityController, ICharacterController, IEnt
     protected override void Awake()
     {
         base.Awake();
-        entityStats = GetComponent<EntityStats>();
+        TryGetComponent(out attacker);
         TryGetComponent(out animationComponent);
         TryGetComponent(out fadeComponent);
         fOVComponent = GetComponent<FOVComponent>();
@@ -23,6 +22,7 @@ public class MyChracterController : EntityController, ICharacterController, IEnt
     public override EntityType EntityType => EntityType.Chracter;
     private void TryAttack(Vector2Int toPos)
     {
+        if (attacker == null) return;
         if (Map.TryGetGridCellAt(toPos, out var gridCell))
         {
             foreach (var entity in gridCell.Entities)
@@ -31,7 +31,7 @@ public class MyChracterController : EntityController, ICharacterController, IEnt
                 {
                     if (this.faction.Faction.IsEnemy(faction.Faction))
                     {
-                        float damage = entityStats.GetDamage(AttackType.Phisycal);
+                        float damage = attacker.GetPhysicalDamage();
                         Turn.PushEvent(() => {
                             if (this.damageable != null && this.damageable.Death) return;
                             damageable.TakeDamage(damage, AttackType.Phisycal);

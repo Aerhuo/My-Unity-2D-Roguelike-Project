@@ -13,14 +13,16 @@ public abstract class EntityController : GridBehaviour, IEntity, IEntitySpawnAnd
     protected IDamageable damageable;
     protected GridMovement gridMovement;
     private readonly List<IEntitySpawnAndDie> components = new(10);
-    public void Destory()
+    private bool isTriggeredDie = false;
+    public void TriggerDestory()
     {
-        if (damageable != null) damageable.Die();
-        else
+        if (!isTriggeredDie)
         {
             TriggerDie();
-            gameObject.SetActive(false);
+            isTriggeredDie = true;
         }
+        
+        Destroy(gameObject);
     }
     protected virtual void Awake()
     {

@@ -18,11 +18,13 @@ public class GameManager : MonoBehaviour
 
     private bool _isConfigsSorted = false;
     private readonly List<IEntity> entities = new();
+    private readonly List<IEntity> allEntities = new();
 
     public void RegisterEntity(IEntity entity)
     {
         if (entity == null || entities.Contains(entity)) return;
         entities.Add(entity);
+        allEntities.Add(entity);
     }
 
     public void UnregisterEntity(IEntity entity)
@@ -65,16 +67,25 @@ public class GameManager : MonoBehaviour
 
         CurrentFloor++;
 
-        foreach (var entity in entities.ToList())
+        foreach (var entity in entities)
         {
-            if (entity.SaveToNextFloor)
+            if (entity.SaveToNextFloor) refreshers.Add(entity);
+        }
+
+        foreach (var entity in allEntities.ToList())
+        {
+            if (!entity.SaveToNextFloor)
             {
-                refreshers.Add(entity);
+                entity.TriggerDestory();
                 continue;
             }
 
-            entity.Destory();
+            if (entity.Service.TryGet<IDamageable>(out var damageable))
+            {
+                if (damageable.Death) entity.TriggerDestory();
+            }
         }
+        allEntities.Clear();
 
         FloorStageSO stageConfig = GetCurrentStageConfig();
 

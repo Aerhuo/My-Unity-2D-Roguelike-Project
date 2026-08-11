@@ -13,14 +13,15 @@ public class PlayerInputReader : MonoBehaviour
     [SerializeField] private InputAction upAction;
     [SerializeField] private InputAction downAction;
     [SerializeField] private InputAction enterAction;
-    public InputAction magicAction;
+    [SerializeField] private InputAction choseAction;
+    [SerializeField] private InputAction magicAction;
     
     private List<Vector2Int> directions = new();
     private InputAction[] inputs;
 
     private void Awake()
     {
-        inputs = new InputAction[] { leftAction, rightAction, upAction, downAction, enterAction, magicAction };
+        inputs = new InputAction[] { leftAction, rightAction, upAction, downAction, enterAction };
     }
 
     private void OnEnable()
@@ -31,6 +32,9 @@ public class PlayerInputReader : MonoBehaviour
             action.started += OnDirInputStarted;
             action.canceled += OnDirInputCanceled;
         }
+
+        choseAction.Enable();
+        magicAction.Enable();
     }
 
     private void OnDisable()
@@ -41,6 +45,9 @@ public class PlayerInputReader : MonoBehaviour
             action.canceled -= OnDirInputCanceled;
             action.Disable();
         }
+
+        choseAction.Disable();
+        magicAction.Disable();
     }
 
     private void Update()
@@ -48,7 +55,7 @@ public class PlayerInputReader : MonoBehaviour
         if (timer > 0) timer -= Time.deltaTime;
     }
 
-    public bool TryRead(out Vector2Int dir)
+    public bool TryReadDir(out Vector2Int dir)
     {
         dir = NullDir;
         if (directions.Count == 0 || timer > 0f) return false;
@@ -57,6 +64,8 @@ public class PlayerInputReader : MonoBehaviour
         dir = directions[^1];
         return true;
     }
+    public bool IsChosePreesed() => choseAction.WasPressedThisFrame();
+    public bool IsMagicPressed() => magicAction.WasPressedThisFrame();
     private Vector2Int GetDir(InputAction action)
     {
         if (action == leftAction) return Vector2Int.left;

@@ -24,7 +24,7 @@ public interface IEntity
     public bool SaveToNextFloor { get; }
     public Vector2Int Pos { get; }
     public ServiceComponent Service { get; }
-    public void Destory();
+    public void TriggerDestory();
 }
 public enum Faction
 {
@@ -45,4 +45,12 @@ public interface IFaction
 public interface IUseable
 {
     public void Use();
+}
+
+public interface IAttacker
+{
+    public float GetPhysicalDamage();
+    public float GetMagicDamage();
+    public float Mp { get; }
+    public void ConsumeMp(float value);
 }

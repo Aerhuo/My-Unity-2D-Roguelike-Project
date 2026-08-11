@@ -97,11 +97,11 @@ public class AnimationComponent : MonoBehaviour, IEntitySpawnAndDie, ITurnWaiter
 
         for (int i = 1; i <= 20; i++)
         {
-            spriteRenderer.color = Color.Lerp(Color.red, originalColor, i / 10f);
+            spriteRenderer.color = Color.Lerp(Color.red, startColor, i / 10f);
             yield return null;
         }
 
-        spriteRenderer.color = originalColor;
+        spriteRenderer.color = startColor;
     }
 
     private IEnumerator DieRoutine()
