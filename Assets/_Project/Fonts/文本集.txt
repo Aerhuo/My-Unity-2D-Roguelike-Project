@@ -1,0 +1,6 @@
+abcdefghijklmnopqrstuvwxyz
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+0123456789
+!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
+移动攻击锁定目标施放魔法交互
+你骷髅精英

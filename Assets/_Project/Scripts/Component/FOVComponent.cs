@@ -17,7 +17,7 @@ public class FOVComponent : MonoBehaviour, IEntitySpawnAndDie, IRefresher
     public event Action OnLateUpdate;
     private GridTransform gridTransform;
     private Func<int, int, bool> OnStep;
-    private int viewRadius;
+    public int ViewRadius { get; private set; }
     private bool OnSteping(int x, int y)
     {
         bool canContinue = !MapManager.Instance.IsOutOfBounds(x, y) && !MapManager.Instance.IsWall(x, y);
@@ -29,14 +29,14 @@ public class FOVComponent : MonoBehaviour, IEntitySpawnAndDie, IRefresher
     public void UpdateView()
     {
         OnEarlyUpdate?.Invoke();
-        Bresenham.CastCircle(gridTransform.Pos, viewRadius, OnStep);
+        Bresenham.CastCircle(gridTransform.Pos, ViewRadius, OnStep);
         OnLateUpdate?.Invoke();
     }
     private void Awake()
     {
         OnStep = OnSteping;
         gridTransform = GetComponent<GridTransform>();
-        viewRadius = GetComponent<HealthComponent>().DataSO.viewRadius;
+        ViewRadius = GetComponent<HealthComponent>().DataSO.viewRadius;
     }
 
     public void OnSpawnLate()

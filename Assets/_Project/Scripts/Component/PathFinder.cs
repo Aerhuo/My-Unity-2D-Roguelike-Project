@@ -43,7 +43,7 @@ public class PathFinder : MonoBehaviour
                 if (Map.IsOutOfBounds(cPos) || Map.IsWall(cPos)) continue;
 
                 int ng = g + 1;
-                if (Map.HasEntity(cPos)) ng += extraCost;
+                if (Map.IsBlock(cPos)) ng += extraCost;
 
                 int nh;
                 if (pathTarget != null) nh = pathTarget.GetDist(cPos.x, cPos.y);

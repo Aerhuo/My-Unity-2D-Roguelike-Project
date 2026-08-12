@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,8 +8,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     private MapManager Map => MapManager.Instance;
     private FogManager Fog => FogManager.Instance;
+    private UIManager UI => UIManager.Instance;
     private EntitySpawnManager Spawn => EntitySpawnManager.Instance;
-
+    public event Action OnPlayerSpawned;
     public int CurrentFloor { get => _currentFloor; private set => _currentFloor = value; }
     [SerializeField] private int _currentFloor;
     private bool readyToNextFloor;
@@ -96,6 +98,7 @@ public class GameManager : MonoBehaviour
         };
         Map.Init(rect, stageConfig.mapGenerator);
         Fog.Init();
+        UI.Init();
 
         GenerateFloorEntities(stageConfig);
 
@@ -103,6 +106,8 @@ public class GameManager : MonoBehaviour
         {
             var pArray = Spawn.Spawn(0, 1);
             if (pArray != null && pArray.Length > 0) Player = pArray[0];
+
+            OnPlayerSpawned?.Invoke();
         }
 
         foreach (var entity in refreshers)
@@ -140,7 +145,7 @@ public class GameManager : MonoBehaviour
                 int minCost = stageConfig.GetMinCost(pool);
                 if (minCost != int.MaxValue)
                 {
-                    int randomRoomId = Random.Range(0, Map.RoomsCount);
+                    int randomRoomId = UnityEngine.Random.Range(0, Map.RoomsCount);
                     ExecuteSpawning(minCost, pool, stageConfig, randomRoomId);
                 }
             }

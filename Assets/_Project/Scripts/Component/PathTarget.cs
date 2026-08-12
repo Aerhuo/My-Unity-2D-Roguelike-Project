@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(GridTransform))]
-public class PathTarget : MonoBehaviour, IEntitySpawnAndDie, IRefresher
+public class PathTarget : GridBehaviour, IEntitySpawnAndDie, IRefresher
 {
     private (int id, int value)[,] dist;
     private MapManager Map => MapManager.Instance;
@@ -12,9 +12,9 @@ public class PathTarget : MonoBehaviour, IEntitySpawnAndDie, IRefresher
         RunBFS();
     }
     private Queue<(int x, int y)> grids = new();
-    public GridTransform GridTransform { get; private set;}
     private int curId = 0;
     public int GetDist(int x, int y) => dist[x, y].id == curId ? dist[x, y].value : int.MaxValue;
+    public int GetDist(Vector2Int pos) => GetDist(pos.x, pos.y);
     private void RunBFS()
     {
         if (curId == int.MinValue) ClearData();

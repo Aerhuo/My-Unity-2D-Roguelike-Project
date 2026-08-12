@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e52e000e8dd55742a29c0d69e446d5b, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: Assembly-CSharp::EntityDataSO
-  entityName: Player
+  entityName: "\u4F60"
   entityID: 0
-  maxHp: 100
-  maxMp: 10
+  maxHp: 25
+  maxMp: 20
   pAtk: 20
   mAtk: 20
   pDef: 5

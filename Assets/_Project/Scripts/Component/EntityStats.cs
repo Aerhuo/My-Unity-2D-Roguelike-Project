@@ -5,6 +5,7 @@ public class EntityStats : MonoBehaviour, IEntitySpawnAndDie, IFaction, IAttacke
 {
     public string Name { get => _name; private set => _name = value; }
     [SerializeField] private string _name;
+    public float MpPercent => MaxMp != 0 ? Mp / MaxMp : 0f;
     public float MaxMp { get => _maxMp; private set => _maxMp = value; }
     [SerializeField] private float _maxMp;
     public float Mp { get => _mp; set => _mp = value; }
@@ -16,6 +17,9 @@ public class EntityStats : MonoBehaviour, IEntitySpawnAndDie, IFaction, IAttacke
     private EntityDataSO dataSO;
     private HealthComponent healthComponent;
     public Faction Faction { get => _faction; set => _faction = value; }
+
+    public int ViewRadius { get => _viewRadius; set => _viewRadius = value; }
+    [SerializeField] private int _viewRadius;
 
     [SerializeField] private Faction _faction;
 
@@ -63,11 +67,8 @@ public class EntityStats : MonoBehaviour, IEntitySpawnAndDie, IFaction, IAttacke
         return GetDamage(AttackType.Magic);
     }
 
-    public void ConsumeMp(float value)
-    {
-        Mp -= value;
-        Mp = Mathf.Max(Mp, 0);
-    }
+    public void ConsumeMp(float value) => Mp = Mathf.Clamp(Mp - value, 0f, MaxMp);
+    public void RestoreMp(float value) => Mp = Mathf.Clamp(Mp + value, 0f, MaxMp);
 }
 public enum AttackType
 {

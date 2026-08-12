@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c310af373c1bf5d468aba02ee42dab19, type: 3}
   m_Name: "\u57FA\u7840\u7269\u4F53\u6C60"
   m_EditorClassIdentifier: Assembly-CSharp::SpawnPoolConfigSO
-  poolName: New Pool
+  poolName: "\u57FA\u7840\u7269\u4F53\u6C60"
   baseDensity: 1
   densityGrowth: 0.01
   guaranteeAtLeastOne: 1
