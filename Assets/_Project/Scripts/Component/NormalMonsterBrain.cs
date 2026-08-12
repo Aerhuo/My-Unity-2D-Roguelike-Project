@@ -14,14 +14,12 @@ public class NormalMonsterBrain : GridBehaviour, IBrain, IEntitySpawnAndDie
     }
     [SerializeField] private EnemyState state;
     private PathFinder pathFinder;
-    private ServiceComponent service;
     private IFaction iFaction;
     private FOVComponent fOVComponent;
     private ICharacterController controller;
     protected void Awake()
     {
         pathFinder = GetComponent<PathFinder>();
-        service = GetComponent<ServiceComponent>();
         TryGetComponent(out fOVComponent);
         TryGetComponent(out iFaction);
         TryGetComponent(out controller);
@@ -88,6 +86,7 @@ public class NormalMonsterBrain : GridBehaviour, IBrain, IEntitySpawnAndDie
     {
         IsThinking = true;
 
+        fOVComponent.UpdateView();
         if (enemies.Count > 0)
         {
             if (pathFinder.pathTarget == null)

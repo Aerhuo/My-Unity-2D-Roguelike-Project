@@ -271,7 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8896f6be1f35d34f9b9a7264b77d930, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridMovement
-  duration: 0.25
+  duration: 0.2
   jumpHeight: 0.5
   _isMoving: 0
 --- !u!114 &3904982538280828103
@@ -333,8 +333,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EntityStats
   _name: 
   _maxMp: 0
+  _mp: 0
   _pAtk: 0
   _mAtk: 0
+  _viewRadius: 0
   _faction: 0
 --- !u!114 &8516269365374207166
 MonoBehaviour:
@@ -403,7 +405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f05aeef35941a04f88be2275256f812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimationComponent
-  animator: {fileID: 0}
+  magicBallMovement: {fileID: 0}
 --- !u!114 &2908941603358633490
 MonoBehaviour:
   m_ObjectHideFlags: 0

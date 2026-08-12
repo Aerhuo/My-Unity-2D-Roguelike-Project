@@ -1,30 +1,26 @@
 using UnityEngine;
 
-[RequireComponent(typeof(AnimationComponent))]
+[RequireComponent(typeof(Animator))]
 public class TagComponent : GridBehaviour, IEntitySpawnAndDie
 {
     private static readonly int TagHash = Animator.StringToHash("Tag");
-    private AnimationComponent animationComponent;
+    private Animator animator;
 
     public void OnDie()
     {
-        animationComponent.animator.SetBool(TagHash, false);
-    }
-
-    public void OnSpawn()
-    {
+        animator.SetBool(TagHash, false);
     }
 
     public void Tag()
     {
-        animationComponent.animator.SetBool(TagHash, true);
+        animator.SetBool(TagHash, true);
     }
     public void Untag()
     {
-        animationComponent.animator.SetBool(TagHash, false);
+        animator.SetBool(TagHash, false);
     }
     private void Awake()
     {
-        animationComponent = GetComponent<AnimationComponent>();
+        animator = GetComponent<Animator>();
     }
 }

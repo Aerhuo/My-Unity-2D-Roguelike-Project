@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 [RequireComponent(typeof(FOVComponent))]
 
@@ -5,15 +6,15 @@ public class MyChracterController : EntityController, ICharacterController, IEnt
 {
     private FadeComponent fadeComponent;
     private IAttacker attacker;
-    private AnimationComponent animationComponent;
     private FOVComponent fOVComponent;
     private TagComponent tagComponent;
     private IFaction faction;
+
+    public event Action OnMoveSuccess;
     protected override void Awake()
     {
         base.Awake();
         TryGetComponent(out attacker);
-        TryGetComponent(out animationComponent);
         TryGetComponent(out fadeComponent);
         fOVComponent = GetComponent<FOVComponent>();
         TryGetComponent(out tagComponent);
@@ -56,9 +57,13 @@ public class MyChracterController : EntityController, ICharacterController, IEnt
         Pos = toPos;
 
         TryMove(nPos, toPos);
-        if (moveSuccess) OnMoveSuccess();
+        if (moveSuccess) MoveSuccess();
         
         TurnManager.Instance.PushEvent(() => fOVComponent.UpdateView());
+    }
+    private void MoveSuccess()
+    {
+        OnMoveSuccess?.Invoke();
     }
     private void BeforeView()
     {
@@ -80,9 +85,6 @@ public class MyChracterController : EntityController, ICharacterController, IEnt
         if (gridMovement == null) return;
         if (fadeComponent == null || !fadeComponent.IsFaded) Turn.PushEvent(() => { if (damageable.Death) return; animationComponent.Play(gridMovement.MoveTo(nPos, toPos)); });
         else Turn.PushEvent(() => { if (damageable.Death) return; gridMovement.Teleport(toPos); } );
-    }
-    protected void OnMoveSuccess()
-    {
     }
     [SerializeField] private bool viewEnemy;
     private void OnView(int x, int y)

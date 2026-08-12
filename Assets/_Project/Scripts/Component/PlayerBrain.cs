@@ -11,7 +11,9 @@ public class PlayerBrain : GridBehaviour, IBrain, IEntitySpawnAndDie
     private PathTarget pathTarget;
     private ICharacterController controller;
     private PlayerChoseComponent choseComponent;
+    private AnimationComponent animationComponent;
     private IAttacker attacker;
+    private IEntity self;
     private IEntity choseEntity;
     [SerializeField] private float magicCost = 10f;
     public bool IsThinking { get; private set; }
@@ -22,6 +24,10 @@ public class PlayerBrain : GridBehaviour, IBrain, IEntitySpawnAndDie
         TryGetComponent(out controller);
         TryGetComponent(out choseComponent);
         TryGetComponent(out attacker);
+        TryGetComponent(out self);
+        TryGetComponent(out animationComponent);
+
+        if (controller != null) controller.OnMoveSuccess += OnMoveSuccess;
     }
     public void OnSpawn()
     {
@@ -93,7 +99,7 @@ public class PlayerBrain : GridBehaviour, IBrain, IEntitySpawnAndDie
     {
         if (read == Vector2Int.zero)
         {
-            if (MapManager.Instance.TryGetFirstEntityOfType<IUseable>(Pos, out var useable)) useable.Use();
+            if (MapManager.Instance.TryGetFirstEntityOfType<IUseable>(Pos, out var useable)) useable.Use(self);
         }
 
         Dir = read;
@@ -125,14 +131,16 @@ public class PlayerBrain : GridBehaviour, IBrain, IEntitySpawnAndDie
     }
     private void MagicLogic()
     {
-        if (choseEntity == null) return;
-        if (attacker.Mp < magicCost) return;
+        if (choseEntity == null || attacker.Mp < magicCost) return;
 
         attacker.ConsumeMp(magicCost);
 
         if (choseEntity.Service.TryGet<IDamageable>(out var damageable))
         {
-            TurnManager.Instance.PushEvent(() => damageable.TakeDamage(attacker.GetMagicDamage(), AttackType.Magic));
+            TurnManager.Instance.PushEvent(() => {
+                damageable.TakeDamage(attacker.GetMagicDamage(), AttackType.Magic);
+                animationComponent.Play(animationComponent.MagicAnimation(Pos, choseEntity.Pos));
+                });
         }
     }
 }

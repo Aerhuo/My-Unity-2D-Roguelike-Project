@@ -9,9 +9,8 @@ public enum AnimationType
 
 public class AnimationComponent : MonoBehaviour, IEntitySpawnAndDie, ITurnWaiter, IRefresher
 {
-    private static readonly int IdleHash = Animator.StringToHash("idle");
     private static readonly int AttackHash = Animator.StringToHash("attack"); 
-    [HideInInspector] public Animator animator;
+    [SerializeField] private GridMovement magicBallMovement;
     private IDamageable damageable;
     private SpriteRenderer spriteRenderer;
 
@@ -61,21 +60,15 @@ public class AnimationComponent : MonoBehaviour, IEntitySpawnAndDie, ITurnWaiter
             case AnimationType.Die:
                 yield return DieRoutine();
                 break;
-
-            case AnimationType.Attack:
-                if (animator != null)
-                {
-                    animator.Play(AttackHash);
-                    animator.Update(0);
-                    var info = animator.GetCurrentAnimatorStateInfo(0);
-                    while (info.shortNameHash == AttackHash && info.normalizedTime < .95f)
-                    {
-                        info = animator.GetCurrentAnimatorStateInfo(0);
-                        yield return null;
-                    }
-                }
-                break;
         }
+    }
+
+    public IEnumerator MagicAnimation(Vector2Int startPos, Vector2Int toPos)
+    {
+        if (magicBallMovement == null) yield break;
+        magicBallMovement.gameObject.SetActive(true);
+        yield return magicBallMovement.MoveTo(startPos, toPos);
+        magicBallMovement.gameObject.SetActive(false);
     }
 
     private IEnumerator TakeDamageRoutine()
@@ -84,20 +77,20 @@ public class AnimationComponent : MonoBehaviour, IEntitySpawnAndDie, ITurnWaiter
 
         Color startColor = spriteRenderer.color;
 
-        for (int i = 1; i <= 10; i++)
+        for (int i = 1; i <= 5; i++)
         {
             spriteRenderer.color = Color.Lerp(startColor, Color.red, i / 5f);
             yield return null; 
         }
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 5; i++)
         {
             yield return null;
         }
 
-        for (int i = 1; i <= 20; i++)
+        for (int i = 1; i <= 5; i++)
         {
-            spriteRenderer.color = Color.Lerp(Color.red, startColor, i / 10f);
+            spriteRenderer.color = Color.Lerp(Color.red, startColor, i / 5f);
             yield return null;
         }
 
@@ -112,9 +105,9 @@ public class AnimationComponent : MonoBehaviour, IEntitySpawnAndDie, ITurnWaiter
         Color startColor = spriteRenderer.color;
         Color targetColor = new Color(startColor.r, startColor.g, startColor.b, 0f);
 
-        for (int i = 1; i <= 40; i++)
+        for (int i = 1; i <= 20; i++)
         {
-            float t = i / 40f;
+            float t = i / 20f;
             transform.localScale = Vector3.Lerp(startScale, Vector3.zero, t);
             spriteRenderer.color = Color.Lerp(startColor, targetColor, t);
             yield return null;
@@ -127,8 +120,11 @@ public class AnimationComponent : MonoBehaviour, IEntitySpawnAndDie, ITurnWaiter
     public void OnDie()
     {
         TurnManager.Instance.UnregisterWaiter(this);
-        damageable.OnTakeDamage -= HandleTakeDamage;
-        damageable.OnDieEvent -= HandleDie;
+        if (damageable != null)
+        {
+            damageable.OnTakeDamage -= HandleTakeDamage;
+            damageable.OnDieEvent -= HandleDie;
+        }
     }
     private void Init()
     {
@@ -142,11 +138,13 @@ public class AnimationComponent : MonoBehaviour, IEntitySpawnAndDie, ITurnWaiter
     public void OnSpawn()
     {
         Init();
-        if (animator != null) animator.Play(IdleHash);
-
         TurnManager.Instance.RegisterWaiter(this);
-        damageable.OnTakeDamage += HandleTakeDamage;
-        damageable.OnDieEvent += HandleDie;
+
+        if (damageable != null)
+        {
+            damageable.OnTakeDamage += HandleTakeDamage;
+            damageable.OnDieEvent += HandleDie;
+        }
     }
 
     public void Refresh()
@@ -159,7 +157,6 @@ public class AnimationComponent : MonoBehaviour, IEntitySpawnAndDie, ITurnWaiter
 
     private void Awake()
     {
-        TryGetComponent(out animator);
         TryGetComponent(out damageable);
         
         if (TryGetComponent(out spriteRenderer))

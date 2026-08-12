@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c310af373c1bf5d468aba02ee42dab19, type: 3}
+  m_Name: "\u57FA\u7840\u7269\u54C1\u6C60"
+  m_EditorClassIdentifier: Assembly-CSharp::SpawnPoolConfigSO
+  poolName: "\u57FA\u7840\u7269\u54C1\u6C60"
+  baseDensity: 1
+  densityGrowth: 0.01
+  guaranteeAtLeastOne: 0
+  safeDistanceFromPlayer: 0
+  entries:
+  - entityData: {fileID: 11400000, guid: 5ba049b904cfd30469c2635100fff638, type: 2}
+    weight: 50
+  - entityData: {fileID: 11400000, guid: 1add427e5cc03c64796f220478b6266f, type: 2}
+    weight: 50

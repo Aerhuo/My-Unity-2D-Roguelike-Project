@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c310af373c1bf5d468aba02ee42dab19, type: 3}
   m_Name: "\u5C0F\u602A\u6C60_1"
   m_EditorClassIdentifier: Assembly-CSharp::SpawnPoolConfigSO
-  poolName: New Pool
+  poolName: "\u5C0F\u602A\u6C60"
   baseDensity: 1
   densityGrowth: 0.01
   guaranteeAtLeastOne: 1
   safeDistanceFromPlayer: 7
   entries:
   - entityData: {fileID: 11400000, guid: 02bdf4a1a41cfe5498f070996c9917de, type: 2}
-    weight: 20
+    weight: 100
+  - entityData: {fileID: 11400000, guid: e71751b0136c46a48b461c3620f35d29, type: 2}
+    weight: 25
+  - entityData: {fileID: 11400000, guid: f66e600fd491b3743889af0ee3eb76f1, type: 2}
+    weight: 50
+  - entityData: {fileID: 11400000, guid: 723470022f53cb2488bb7685feb261d8, type: 2}
+    weight: 25

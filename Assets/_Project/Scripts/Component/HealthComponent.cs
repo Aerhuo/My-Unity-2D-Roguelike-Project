@@ -3,8 +3,9 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(GridTransform))]
-public class HealthComponent : MonoBehaviour, IEntitySpawnAndDie, IDamageable
+public class HealthComponent : MonoBehaviour, IEntitySpawnAndDie, IDamageable, IHealable
 {
+    public float HpPercent => MaxHealth != 0 ? Health / MaxHealth : 0f;
     public float MaxHealth { get => _maxHp; private set => _maxHp = value; }
     [SerializeField] private float _maxHp;
     public float Health { get => _hp; private set => _hp = value; }
@@ -48,13 +49,10 @@ public class HealthComponent : MonoBehaviour, IEntitySpawnAndDie, IDamageable
         Death = true;
         OnDieEvent?.Invoke();
         entitySpwaner?.TriggerDie();
-
-        StartCoroutine(WaitAnimationToDie());
     }
     private IEntitySpwaner entitySpwaner;
     private void Awake()
     {
-        TryGetComponent(out animationComponent);
         TryGetComponent(out entitySpwaner);
     }
 
@@ -63,22 +61,8 @@ public class HealthComponent : MonoBehaviour, IEntitySpawnAndDie, IDamageable
         Death = false;
         InitData();
     }
-    private AnimationComponent animationComponent;
-    private IEnumerator WaitAnimationToDie()
+    public void Heal(float value)
     {
-        yield return null;
-
-        if (animationComponent == null)
-        {
-            gameObject.SetActive(false);
-            yield break;
-        }
-
-        while (animationComponent.Wait) yield return null;
-
-        gameObject.SetActive(false);
-    }
-    public void OnDie()
-    {
+        Health = Mathf.Clamp(Health + value, 0f, MaxHealth);
     }
 }

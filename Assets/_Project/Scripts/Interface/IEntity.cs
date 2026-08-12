@@ -44,7 +44,7 @@ public interface IFaction
 }
 public interface IUseable
 {
-    public void Use();
+    public void Use(IEntity user);
 }
 
 public interface IAttacker
@@ -53,4 +53,10 @@ public interface IAttacker
     public float GetMagicDamage();
     public float Mp { get; }
     public void ConsumeMp(float value);
+    public void RestoreMp(float value);
+}
+
+public interface IHealable
+{
+    public void Heal(float value);
 }

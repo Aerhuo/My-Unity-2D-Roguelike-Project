@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ public abstract class EntityController : GridBehaviour, IEntity, IEntitySpawnAnd
     public ServiceComponent Service { get; private set; }
     protected IDamageable damageable;
     protected GridMovement gridMovement;
+    protected AnimationComponent animationComponent;
     private readonly List<IEntitySpawnAndDie> components = new(10);
     private bool isTriggeredDie = false;
     public void TriggerDestory()
@@ -19,7 +21,6 @@ public abstract class EntityController : GridBehaviour, IEntity, IEntitySpawnAnd
         if (!isTriggeredDie)
         {
             TriggerDie();
-            isTriggeredDie = true;
         }
         
         Destroy(gameObject);
@@ -29,6 +30,7 @@ public abstract class EntityController : GridBehaviour, IEntity, IEntitySpawnAnd
         Service = GetComponent<ServiceComponent>();
         TryGetComponent(out damageable);
         TryGetComponent(out gridMovement);
+        TryGetComponent(out animationComponent);
         GetComponents(components);
     }
     private void Init()
@@ -59,10 +61,29 @@ public abstract class EntityController : GridBehaviour, IEntity, IEntitySpawnAnd
     }
     public virtual void TriggerDie()
     {
+        if (isTriggeredDie) return;
+        
         foreach (var component in components) component.OnDie();
         foreach (var component in components) component.OnDieLate();
+        isTriggeredDie = true;
+
+        StartCoroutine(WaitAnimationToDie());
     }
     
+    private IEnumerator WaitAnimationToDie()
+    {
+        yield return null;
+
+        if (animationComponent == null)
+        {
+            gameObject.SetActive(false);
+            yield break;
+        }
+
+        while (animationComponent.Wait) yield return null;
+
+        gameObject.SetActive(false);
+    }
     protected TurnManager Turn => TurnManager.Instance;
     protected FogManager Fog => FogManager.Instance;
     protected MapManager Map => MapManager.Instance;
